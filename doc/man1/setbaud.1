@@ -1,0 +1,51 @@
+.TH SETBAUD 1 "September 2021" Linux "User Commands"
+.SH NAME
+setbaud \- set custom baud rates on a Linux terminal device
+.SH SYNOPSIS
+.B setbaud
+\fIDEVICE\fR [\fIINRATE\fR/\fIOUTRATE\fR] [\fIOUTRATE\fR]
+.SH DESCRIPTION
+The standard UNIX termios interface allows only a limited number of baud rates (9600, 384000, 115200, etc.) to be configured for a terminal device.
+Many UARTs, like in USB to serial converters or SOCs, support a much greater range of baud rates, some of which are better suited for interfacing with microcontrollers or automation busses than those traditionally used on modem lines.
+.PP
+Linux, via the termios2 interface, allows to set baud rates other than those standardized for terminals. This interface however is not accessible through standard tools.
+.PP
+This tool allows to set arbitrary baud rates for the input and output lines on a terminal device under Linux. Which combinations of rates at what accuracy are actually supported depends on the individual hardware and kernel drivers used.
+.PP
+In addition to setting the baud rate, the terminal is configured to raw mode (no echoing, no special character handling, etc.) as with
+.BR cfmakeraw ().
+For adjusting terminal settings like parity and stop bits refer to
+.BR stty (1).
+.PP
+\fIDEVICE\fR specifies the path to the terminal device to be configured.
+.PP
+\fIINRATE\fR and \fIOUTRATE\fR specify the rates for the input and output lines respectively, in bauds per second.
+.br
+If only one rate is specified, this will be used for both directions.
+.PP
+In case no rate is specified, the current baud settings of the device will be printed to standard error without any changes being made to the terminal configuration.
+.SH EXAMPLES
+Print the currently set input and output rates of the first USB to serial interface to standard error:
+.IP
+setbaud /dev/ttyUSB0
+.PP
+Set the input and output rate on the first USB to serial interface to 125kbaud/s:
+.IP
+setbaud /dev/ttyUSB0 125000
+.PP
+Set 125kbaud/s for input and 250kbaud/s for output on the first USB to serial interface:
+.IP
+setbaud /dev/ttyUSB0 125000 250000
+.SH BUGS
+Note that unsupported settings may lead to devices assuming a different than the desired configuration without reporting an error.
+.PP
+In the output of
+.BR stty (1),
+non-standard rates are reported as 0 baud.
+.SH AUTHOR
+Written by Johannes Schmitz
+.SH SOURCE
+git://github.com/jonny112/setbaud.git
+.SH SEE ALSO
+.BR stty (1)
+.BR termios (3)
