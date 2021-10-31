@@ -1,6 +1,6 @@
 
 CC = gcc
-CC_OPTS = -Wall
+CC_OPTS = -std=gnu99 -Wall
 
 BIN = bin
 OUT = setbaud
